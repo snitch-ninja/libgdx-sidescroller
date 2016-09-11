@@ -29,7 +29,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	
 	@Override
 	public void create () {
-		
+		System.out.println( ClassLoader.getSystemClassLoader().getResource(".").getPath() );
 		random = new Random(); // uses System.nanoTime() as seed
 		
 		Gdx.input.setInputProcessor(this);
@@ -37,7 +37,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		treesData  = new ArrayList<Object>();
 		stonesData = new ArrayList<Object>();
 		
-		treeSheet = new Texture(Gdx.files.absolute("C:/assets/trees.png"));
+		treeSheet = new Texture(Gdx.files.classpath("assets/trees.png"));
 		
 		character = new Character(0, 0, 0.03125f, 1);
 		

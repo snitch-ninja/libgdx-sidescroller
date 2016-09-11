@@ -28,11 +28,11 @@ public class renderer {
 	static float cloud = 0.0f;
 	
 	public static void init(){
-		dirtImg = new Texture(Gdx.files.absolute("C:/assets/dirt.png"));
-		tgrassImg = new Texture(Gdx.files.absolute("C:/assets/tallgrass.png"));
-		grassImg = new Texture(Gdx.files.absolute("C:/assets/grass.png"));
-		background = new Texture(Gdx.files.absolute("C:/assets/sky.png"));
-		stoneSheet = new Texture(Gdx.files.absolute("C:/assets/stones.png"));
+		dirtImg = new Texture(Gdx.files.classpath("assets/dirt.png"));
+		tgrassImg = new Texture(Gdx.files.classpath("assets/tallgrass.png"));
+		grassImg = new Texture(Gdx.files.classpath("assets/grass.png"));
+		background = new Texture(Gdx.files.classpath("assets/sky.png"));
+		stoneSheet = new Texture(Gdx.files.classpath("assets/stones.png"));
 	}
 	
 	public static void draw(){
@@ -129,7 +129,7 @@ public class renderer {
 		//[[ DRAW CHARACTER ]]
 		character.draw(batch);
 		
-		if (gui.buttons.get(gui.activeGUI)[3].scale < 1) {
+		if (gui.buttons.containsKey(gui.activeGUI) && gui.buttons.get(gui.activeGUI)[3].scale < 1) {
 			//aaa = aaa + 1/60;
 			/*draw(character.item.img,
 					(0.5*width-character.size*0.25) + character.size*0.25 - 64*character.facing,

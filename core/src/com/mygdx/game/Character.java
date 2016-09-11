@@ -15,20 +15,28 @@ public class Character {
 	public Dir dir;
 	public float size;
 	public int facing;
-	public boolean swinging = false;
+	public boolean swinging;
 	
-	public String collecting = "";
+	public Inventory inventory;
+	
+	public int woodCount;
+	public int stoneCount;
+	
+	public Item collecting;
+	
+	public float time;
+	public float window;
+	public float cursorPosition;
 	
 	public static Texture charImg;
 	
-	
-	public float tilePosition = 0;
+	public float tilePosition;
 	int anim = 0;
 	int[] animPause = {32, 0, 0};
 	int[] animTiles = {7, 4, 4};
 	
-	//list of info about the currently held item
-	public Map<String, Object> item;
+	//currently held item
+	public Item item;
 	ShapeRenderer shapeRenderer;
 	
 	public Character(float x_, float y_, float size_, int facing_){
@@ -37,12 +45,21 @@ public class Character {
 		size = size_;
 		facing = facing_;
 		dir = new Dir(0.f, 0.f, 0.f);
-		item = new HashMap<String, Object>();
-		item.put("name", "nothing");
+		item = null;
 		
-		charImg = new Texture(Gdx.files.absolute("C:\\assets\\char.png"));
+		charImg = new Texture(Gdx.files.classpath("assets/char.png"));
 		
 		shapeRenderer = new ShapeRenderer();
+
+		woodCount = 0;
+		stoneCount = 0;
+		collecting = null;
+		tilePosition = 0;
+		time = MyGdxGame.random.nextFloat()*0.5f+0.25f;
+		window = 0.25f;
+		cursorPosition = 0.f;
+		
+		inventory = new Inventory();
 	}
 	
 	public void draw(SpriteBatch batch){
@@ -67,12 +84,10 @@ public class Character {
 				false);
 	}
 	
-	public float time = MyGdxGame.random.nextFloat()*0.5f+0.25f;
-	public float window = 0.25f;
-	public float cursorPosition = 0.f;
+	
 	
 	public boolean collect(){
-		if(collecting.equals(""))
+		if(collecting == null)
 			return false;
 		
 		float width = Gdx.graphics.getWidth();
@@ -95,22 +110,29 @@ public class Character {
 			shapeRenderer.rect(width/2f - width/64.f, height/1.5f, width/32.f, height/128.f);
 			cursorPosition++;//Gdx.graphics.getDeltaTime();
 			if(cursorPosition > -63.f){
-				collecting = ("");
 				cursorPosition = 0.f;
 				time = MyGdxGame.random.nextFloat()*0.5f+0.25f;
-				//inventory.put(resource, 1); unless its already there
+				
+				if(collecting != Item.AIR){
+					MyGdxGame.character.inventory.put(collecting, 1);
+					System.out.println(Item.string.get(collecting));
+				}
+				collecting = null;
 			}
 		}else if (cursorPosition > 1.f){
 			//not collected
 			shapeRenderer.setColor(1, 0, 0, 0.667f);
 			shapeRenderer.rect(width/2f - width/64.f, height/1.5f, width/32.f, height/128.f);
+			System.out.println("**CORLECTED: " + collecting);
 			cursorPosition = -64.f;
+			collecting = Item.AIR;
 		} else if (cursorPosition < 0.f){
 			//collected
 			shapeRenderer.setColor(0, 1, 0, 0.667f);
 			shapeRenderer.rect(width/2f - width/64.f, height/1.5f, width/32.f, height/128.f);
 			System.out.println("**CORLECTED: " + collecting);
 			cursorPosition = -64.f;
+			//collecting = Item.AIR;
 			
 		} else cursorPosition+=Gdx.graphics.getDeltaTime();
 		
